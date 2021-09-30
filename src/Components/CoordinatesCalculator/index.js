@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Card, Container } from 'react-bootstrap'
-import coordinatesData from './../../Utils/data.json'
+import coordinatesData from '../../Utils/data.json'
 import DatePicker from 'react-datepicker'
 import moment from 'moment'
-import calculateDistance from './../../Utils/calculateDistance'
+import calculateDistance from '../../Utils/calculateDistance'
 import ReactGoogleMap from '../GoogleMap'
 import styles from './style.module.css'
 
-const CoordinatesCalculate = () => {
+const CoordinatesCalculator = () => {
   const [startDate, setStartDate] = useState(null)
   const [calculatedDistance, setCalculatedDistance] = useState('')
   const [calculatedDistanceMiles, setCalculatedDistanceMiles] = useState('')
@@ -106,4 +106,4 @@ const CoordinatesCalculate = () => {
   )
 }
 
-export default CoordinatesCalculate
+export default CoordinatesCalculator

@@ -1,10 +1,10 @@
 import './App.css'
-import CoordinatesCalculate from '../Components/CoordinatesCalculate'
+import CoordinatesCalculator from '../Components/CoordinatesCalculator'
 
 function App() {
   return (
     <>
-      <CoordinatesCalculate />
+      <CoordinatesCalculator />
     </>
   )
 }
