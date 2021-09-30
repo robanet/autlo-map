@@ -26,7 +26,7 @@
 //:::                                                                         :::
 //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-function calculateDistance(lat1, lon1, lat2, lon2, unit = 'K') {
+function calculateDistance(lat1, lon1, lat2, lon2, unit) {
   if (lat1 == lat2 && lon1 == lon2) {
     return 0
   } else {
