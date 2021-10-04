@@ -1,49 +1,49 @@
-import React, { useCallback, useState } from 'react'
-import { GoogleMap, Marker, useJsApiLoader, InfoWindow, Polyline } from '@react-google-maps/api'
+import React, { useCallback, useState } from "react";
+import { GoogleMap, Marker, useJsApiLoader, InfoWindow, Polyline } from "@react-google-maps/api";
 
-const ReactGoogleMap = ({ coordinatesState, activeMarkerState }) => {
-  const [coordinates, setCoordinates] = coordinatesState
-  const [activeMarker, setActiveMarker] = activeMarkerState
+const ReactGoogleMap = ({ coordinatesState, selectedLocationsState }) => {
+  const [coordinates, setCoordinates] = coordinatesState;
+  const [selectedLocations, setSelectedLocations] = selectedLocationsState;
   const { isLoaded } = useJsApiLoader({
-    id: 'google-map-script',
+    id: "google-map-script",
     googleMapsApiKey: process.env.REACT_APP_KEY_GOOGLE,
-  })
-  const [map, setMap] = useState(null)
+  });
+  const [map, setMap] = useState(null);
 
   const onLoad = React.useCallback(function callback(map) {
-    const bounds = new window.google.maps.LatLngBounds()
-    coordinates.forEach(({ lat, lng }) => bounds.extend({ lat, lng }))
-    map.fitBounds(bounds)
-    setMap(map)
-  }, [])
+    const bounds = new window.google.maps.LatLngBounds();
+    coordinates.forEach(({ lat, lng }) => bounds.extend({ lat, lng }));
+    map.fitBounds(bounds);
+    setMap(map);
+  }, []);
 
   const onUnmount = useCallback(function callback(map) {
-    setMap(null)
-  }, [])
+    setMap(null);
+  }, []);
 
   const markerOnClick = (marker) => {
     // console.log('marker onclick: ', marker)
-  }
+  };
 
-  const handleActiveMarker = (marker) => {
-    if (activeMarker.length >= 2) {
-      alert('You select only two coordinates at a time!')
-      return
+  const handleSelectedLocations = (marker) => {
+    if (selectedLocations.length >= 2) {
+      alert("You select only two coordinates at a time!");
+      return;
     }
-    if (activeMarker.some((activeMarker) => activeMarker.id === marker.id)) {
-      alert('You already selected the coordinates.')
-      return
+    if (selectedLocations.some((selectedLocations) => selectedLocations.id === marker.id)) {
+      alert("You already selected the coordinates.");
+      return;
     }
-    setActiveMarker([...activeMarker, marker])
-  }
+    setSelectedLocations([...selectedLocations, marker]);
+  };
 
-  const polylinePaths = activeMarker.length === 2 ? activeMarker.map(({ lat, lng }) => ({ lat, lng })) : []
+  const polylinePaths = selectedLocations.length === 2 ? selectedLocations.map(({ lat, lng }) => ({ lat, lng })) : [];
 
-  const options = {
-    strokeColor: '#FF0000',
+  const polylinePathsStyle = {
+    strokeColor: "#FF0000",
     strokeOpacity: 0.8,
     strokeWeight: 2,
-    fillColor: '#FF0000',
+    fillColor: "#FF0000",
     fillOpacity: 0.35,
     clickable: false,
     draggable: false,
@@ -52,13 +52,14 @@ const ReactGoogleMap = ({ coordinatesState, activeMarkerState }) => {
     radius: 30000,
     paths: polylinePaths,
     zIndex: 1,
-  }
+  };
 
   return isLoaded ? (
     <GoogleMap
       mapContainerStyle={{
-        width: '100%',
-        height: '700px',
+        width: "100%",
+        maxHeight: "800px",
+        height: "100vh",
       }}
       zoom={16}
       onLoad={onLoad}
@@ -69,29 +70,29 @@ const ReactGoogleMap = ({ coordinatesState, activeMarkerState }) => {
           key={id}
           position={{ lat, lng }}
           onClick={(e) => {
-            handleActiveMarker({ id, date_created, date_disabled, lat, lng })
-            markerOnClick(e)
+            handleSelectedLocations({ id, date_created, date_disabled, lat, lng });
+            markerOnClick(e);
           }}>
-          {activeMarker.length
-            ? activeMarker.map((activeMarkerIdObj) =>
-                activeMarkerIdObj?.id === id ? (
+          {selectedLocations.length
+            ? selectedLocations.map((selectedLocationsIdObj) =>
+                selectedLocationsIdObj?.id === id ? (
                   <InfoWindow
                     onCloseClick={() => {
-                      const filteredMarker = activeMarker.filter((markerFilter) => markerFilter?.id !== activeMarkerIdObj?.id)
-                      setActiveMarker(filteredMarker)
+                      const filteredMarker = selectedLocations.filter((markerFilter) => markerFilter?.id !== selectedLocationsIdObj?.id);
+                      setSelectedLocations(filteredMarker);
                     }}>
-                    <div>{`Location ${activeMarkerIdObj?.id}`}</div>
+                    <div>{`Location ${selectedLocationsIdObj?.id}`}</div>
                   </InfoWindow>
                 ) : null
               )
             : null}
         </Marker>
       ))}
-      {polylinePaths.length ? <Polyline path={polylinePaths} options={options} /> : null}
+      {polylinePaths.length ? <Polyline path={polylinePaths} options={polylinePathsStyle} /> : null}
     </GoogleMap>
   ) : (
     <></>
-  )
-}
+  );
+};
 
-export default ReactGoogleMap
+export default ReactGoogleMap;
