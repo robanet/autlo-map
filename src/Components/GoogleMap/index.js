@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React from "react";
 import { GoogleMap, Marker, useJsApiLoader, InfoWindow, Polyline } from "@react-google-maps/api";
 
 const ReactGoogleMap = ({ coordinatesState, selectedLocationsState }) => {
@@ -8,22 +8,12 @@ const ReactGoogleMap = ({ coordinatesState, selectedLocationsState }) => {
     id: "google-map-script",
     googleMapsApiKey: process.env.REACT_APP_KEY_GOOGLE,
   });
-  const [map, setMap] = useState(null);
 
   const onLoad = React.useCallback(function callback(map) {
     const bounds = new window.google.maps.LatLngBounds();
     coordinates.forEach(({ lat, lng }) => bounds.extend({ lat, lng }));
     map.fitBounds(bounds);
-    setMap(map);
   }, []);
-
-  const onUnmount = useCallback(function callback(map) {
-    setMap(null);
-  }, []);
-
-  const markerOnClick = (marker) => {
-    // console.log('marker onclick: ', marker)
-  };
 
   const handleSelectedLocations = (marker) => {
     if (selectedLocations.length >= 2) {
@@ -62,8 +52,7 @@ const ReactGoogleMap = ({ coordinatesState, selectedLocationsState }) => {
         height: "100vh",
       }}
       zoom={16}
-      onLoad={onLoad}
-      onUnmount={onUnmount}>
+      onLoad={onLoad}>
       {/* Child components, such as markers, info windows, etc. */}
       {coordinates.map(({ id, date_created, date_disabled, lat, lng }) => (
         <Marker
@@ -71,7 +60,6 @@ const ReactGoogleMap = ({ coordinatesState, selectedLocationsState }) => {
           position={{ lat, lng }}
           onClick={(e) => {
             handleSelectedLocations({ id, date_created, date_disabled, lat, lng });
-            markerOnClick(e);
           }}>
           {selectedLocations.length
             ? selectedLocations.map((selectedLocationsIdObj) =>
