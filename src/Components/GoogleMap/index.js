@@ -65,6 +65,7 @@ const ReactGoogleMap = ({ coordinatesState, selectedLocationsState }) => {
             ? selectedLocations.map((selectedLocationsIdObj) =>
                 selectedLocationsIdObj?.id === id ? (
                   <InfoWindow
+                    key={selectedLocationsIdObj.id}
                     onCloseClick={() => {
                       const filteredMarker = selectedLocations.filter((markerFilter) => markerFilter?.id !== selectedLocationsIdObj?.id);
                       setSelectedLocations(filteredMarker);

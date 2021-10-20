@@ -154,30 +154,25 @@ const CoordinatesCalculator = () => {
               <Card style={{ width: "100%" }} className="text-start bg-light mx-auto mt-2">
                 <Card.Body>
                   <Card.Title className="text-center">Selected Coordinates</Card.Title>
-                  {selectedLocations.map((location, idx) => {
-                    console.log(location);
-                    return (
-                      <>
-                        <Card.Text>
-                          Location {idx + 1}:
-                          <ul>
-                            <li>lat {location.lat}</li>
-                            <li>lng {location.lng}</li>
-                          </ul>
-                        </Card.Text>
-                      </>
-                    );
-                  })}
+                  {selectedLocations.map((location, idx) => (
+                    <div className="card-text" key={idx}>
+                      <p>Location {idx + 1}:</p>
+                      <ul>
+                        <li>lat {location.lat}</li>
+                        <li>lng {location.lng}</li>
+                      </ul>
+                    </div>
+                  ))}
                   {!!calculatedDistance ? (
                     <>
                       <Card.Title className="text-center mb-3">Calculated Distance</Card.Title>
-                      <Card.Text>
+                      <div className="card-text">
                         <ul>
                           <li>Miles: {calculatedDistanceMiles}</li>
                           <li>Kilometers: {calculatedDistance}</li>
                           <li>Nautical miles: {calculatedDistanceNauticalMiles}</li>
                         </ul>
-                      </Card.Text>
+                      </div>
                     </>
                   ) : (
                     <></>
