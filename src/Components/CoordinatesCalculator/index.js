@@ -39,26 +39,21 @@ const CoordinatesCalculator = () => {
     setCoordinates([]);
   }
 
-  function checkAndFilterDisabledDateFromSearchCoordinatesHandlerResults(coordinates) {
-    const filteredCoordinates = coordinates.filter((coordinate) => {
-      const coordinateDisabledDate = moment(coordinate.date_disabled).format("YYYY-MM-DD hh:mm:ss");
-      const formattedStarDate = moment(startDate).format("YYYY-MM-DD hh:mm:ss");
-      const formattedEndDate = moment(endDate).format("YYYY-MM-DD hh:mm:ss");
-
-      return coordinateDisabledDate > formattedStarDate || coordinate.date_disabled === null;
-    });
-    setCoordinates(filteredCoordinates);
-  }
-
   function searchCoordinatesHandler() {
     if (!startDate || !endDate) return;
+    const dateFormatStr = "YYYY-MM-DD hh:mm:ss";
     const filteredCoordinates = coordinatesData.filter((coordinate) => {
-      const coordinateCreateDate = moment(coordinate.date_created).format("YYYY-MM-DD hh:mm:ss");
-      const formattedStarDate = moment(startDate).format("YYYY-MM-DD hh:mm:ss");
-      const formattedEndDate = moment(endDate).format("YYYY-MM-DD hh:mm:ss");
-      return coordinateCreateDate >= formattedStarDate && coordinateCreateDate <= formattedEndDate;
+      const coordinateCreateDate = moment(coordinate.date_created).format(dateFormatStr);
+      const formattedStartDate = moment(startDate).format(dateFormatStr);
+      const formattedEndDate = moment(endDate).format(dateFormatStr);
+      const coordinateDisabledDate = moment(coordinate.date_disabled).format(dateFormatStr);
+      return (
+        (coordinateDisabledDate > formattedStartDate || coordinate.date_disabled === null) &&
+        coordinateCreateDate >= formattedStartDate &&
+        coordinateCreateDate <= formattedEndDate
+      );
     });
-    checkAndFilterDisabledDateFromSearchCoordinatesHandlerResults(filteredCoordinates);
+    setCoordinates(filteredCoordinates);
   }
 
   // disable endDate input & clear input value if startDate input is empty
